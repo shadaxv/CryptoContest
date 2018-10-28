@@ -26,9 +26,10 @@ class index {
 
   async saveUsersData() {
     const self = this;
+    const filename = `result-${this.freshData['Date and time'].split(' ').join('').split(':').join('').split('/').join('')}`;
 
     try {
-      await file.save(self.freshData);
+      await file.save(self.freshData, filename);
       this.loadFileNames();
     } catch (error) {
       console.log(`Error: ${error}`);
@@ -80,24 +81,33 @@ class index {
             'Starting balance': fullTable[0][user].Balance,
             'Ending balance': fullTable[1][user].Balance
           }
-          await resultTable.push(userResult);
+          resultTable.push(userResult);
         }
         resultTable.sort((a, b) => (a.PnL > b.PnL) ? -1 : ((b.PnL > a.PnL) ? 1 : 0));
+        for (let element of resultTable) {
+          element['Position'] = await resultTable.indexOf(element) + 1;
+        }
         self.result = resultTable;
       } else {
         self.result = "Need more data for calculate";
       }
-      self.displayResults();
+      console.log(self.result)
+      self.saveResults();
     } catch (error) {
       console.log(`Error: ${error}`);
     }
-
-
   }
 
-  async displayResults() {
-    console.log(this.result)
-    await console.log("Work Done!");
+  async saveResults() {
+    const self = this;
+    const filename = `leaderboard-${this.freshData['Date and time'].split(' ').join('').split(':').join('').split('/').join('')}`;
+
+    try {
+      await file.save(self.result, filename);
+      console.log("Work Done!");
+    } catch (error) {
+      console.log(`Error: ${error}`);
+    }
   }
 }
 

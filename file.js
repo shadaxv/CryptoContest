@@ -13,16 +13,14 @@ class file {
     this.filesContent = [];
   }
 
-  async save(data) {
-    const timestamp = data['Date and time'].split(' ').join('').split(':').join('').split('/').join('');
-
-    await writeFile(`${this.path}result-${timestamp}.json`, JSON.stringify(data), {
+  async save(data, fileName) {
+    
+    await writeFile(`${this.path}${fileName}.json`, JSON.stringify(data), {
       encoding: 'utf8'
     });
 
     return true;
   }
-
 
   async loadFileNames() {
     const self = this;

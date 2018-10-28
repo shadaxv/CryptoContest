@@ -1,34 +1,54 @@
 const fs = require('fs');
-
-async function saveResult() {
-  try {
-    const data = await asyncAction();
-    console.log(`message = ${data}`);
-  } catch (error) {
-    console.log(`message = ${error}`);
-  }
-}
-
-saveResult();
+const {
+  promisify
+} = require('util');
+const readDir = promisify(fs.readdir);
+const readFile = promisify(fs.readFile);
+const writeFile = promisify(fs.writeFile);
 
 class file {
   constructor() {
+    this.path = "./results/";
+    this.files = [];
+    this.filesContent = [];
   }
 
-  save(data) {
+  async save(data) {
     const timestamp = data['Date and time'].split(' ').join('').split(':').join('').split('/').join('');
-    console.log(timestamp);
-    fs.writeFile(`./results/result-${timestamp}.json`, JSON.stringify(data), function(err) {
-      if (err) {
-        return console.log(err);
-      }
 
-      console.log("The file was saved!");
+    await writeFile(`${this.path}result-${timestamp}.json`, JSON.stringify(data), {
+      encoding: 'utf8'
     });
+
+    return true;
   }
 
-  load() {
 
+  async loadFileNames() {
+    const self = this;
+
+    const fileNames = await readDir(`${this.path}`, {
+      encoding: 'utf8'
+    });
+    fileNames.forEach(fileName => {
+      self.files.push(fileName);
+    });
+
+    return this.files;
+  }
+
+  async loadFiles(fileNames) {
+    const self = this;
+    const files = [];
+
+    for (let fileName of fileNames) {
+      const result = await readFile(`${this.path}${fileName}`, {
+        encoding: 'utf8'
+      });
+      self.filesContent.push(result);
+    }
+
+    return this.filesContent;
   }
 }
 

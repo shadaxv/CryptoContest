@@ -30,6 +30,7 @@ class index {
 
     try {
       await file.save(self.freshData, filename);
+
       this.loadFileNames();
     } catch (error) {
       console.log(`Error: ${error}`);

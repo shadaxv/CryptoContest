@@ -14,7 +14,7 @@ class file {
   }
 
   async save(data, fileName) {
-    
+
     await writeFile(`${this.path}${fileName}.json`, JSON.stringify(data), {
       encoding: 'utf8'
     });
@@ -29,7 +29,9 @@ class file {
       encoding: 'utf8'
     });
     fileNames.forEach(fileName => {
-      self.files.push(fileName);
+      if (fileName.includes('result')) {
+        self.files.push(fileName);
+      }
     });
 
     return this.files;

@@ -52,8 +52,9 @@ class index {
     const self = this;
 
     this.filesForResult = this.filenames;
+
     if (this.filesForResult.length > 2) {
-      this.filesForResult.splice(1, this.filenames.length - 2);
+      this.filesForResult.splice(1, this.filesForResult.length - 2);
     }
     try {
       self.filesContent = await file.loadFiles(this.filesForResult);
@@ -88,11 +89,11 @@ class index {
           element['Position'] = await resultTable.indexOf(element) + 1;
         }
         self.result = resultTable;
+        self.saveResults();
       } else {
         self.result = "Need more data for calculate";
       }
       console.log(self.result)
-      self.saveResults();
     } catch (error) {
       console.log(`Error: ${error}`);
     }
